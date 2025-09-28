@@ -29,9 +29,9 @@ class Proposition extends Model
         return $this->belongsTo(Question::class);
     }
 
-    // Relation avec les réponses utilisateur
-    // public function reponsesUtilisateur()
-    // {
-    //     return $this->hasMany(ReponseUtilisateur::class);
-    // }
+  
+    public function reponsesUtilisateur()
+    {
+        return $this->hasMany(ReponseUtilisateur::class);
+    }
 }

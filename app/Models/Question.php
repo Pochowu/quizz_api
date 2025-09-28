@@ -37,8 +37,8 @@ class Question extends Model
     }
 
     // // Relation avec les réponses utilisateur
-    // public function reponsesUtilisateur()
-    // {
-    //     return $this->hasMany(ReponseUtilisateur::class);
-    // }
+    public function reponsesUtilisateur()
+    {
+        return $this->hasMany(ReponseUtilisateur::class);
+    }
 }
