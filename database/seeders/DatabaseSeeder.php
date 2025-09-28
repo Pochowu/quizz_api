@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             PhaseSeeder::class,
             ThemeSeeder::class,
+            QuestionSeeder::class,
         ]);
     }
 }

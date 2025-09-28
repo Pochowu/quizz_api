@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PhaseController;
 use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\QuestionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,17 +24,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/phases/{phase}', [PhaseController::class, 'update']);
     Route::delete('/phases/{phase}', [PhaseController::class, 'destroy']);
     
-    // Routes UTILISATEUR pour les thèmes (accessibles à tous)
+    // Routes pour les thèmes
     Route::get('/themes', [ThemeController::class, 'allThemes']);
     Route::get('/themes/actifs', [ThemeController::class, 'themesActifs']);
     Route::get('/phases/{phaseId}/themes/actifs', [ThemeController::class, 'themesActifsParPhase']);
     Route::get('/themes/{theme}', [ThemeController::class, 'show']);
-    
-    // Routes ADMIN pour les thèmes (CRUD complet)
     Route::get('/admin/themes', [ThemeController::class, 'index']);
     Route::post('/admin/themes', [ThemeController::class, 'store']);
     Route::put('/admin/themes/{theme}', [ThemeController::class, 'update']);
     Route::delete('/admin/themes/{theme}', [ThemeController::class, 'destroy']);
+    
+    // Routes UTILISATEUR pour les questions (accessibles à tous)
+    Route::get('/themes/{themeId}/questions/actives', [QuestionController::class, 'questionsActivesParTheme']);
+    Route::get('/phases/{phaseId}/questions/actives', [QuestionController::class, 'questionsActivesParPhase']);
+    Route::get('/questions/{question}/avec-propositions', [QuestionController::class, 'questionAvecPropositions']);
+    Route::get('/questions/{question}', [QuestionController::class, 'show']);
+    
+    // Routes ADMIN pour les questions (CRUD complet)
+    Route::get('/admin/questions', [QuestionController::class, 'index']);
+    Route::post('/admin/questions', [QuestionController::class, 'store']);
+    Route::put('/admin/questions/{question}', [QuestionController::class, 'update']);
+    Route::delete('/admin/questions/{question}', [QuestionController::class, 'destroy']);
 });
 
 // Route pour tester l'authentification

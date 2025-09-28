@@ -28,9 +28,9 @@ class Theme extends Model
         return $this->belongsTo(Phase::class);
     }
 
-    // // Relation avec les questions
-    // public function questions()
-    // {
-    //     return $this->hasMany(Question::class);
-    // }
+    // Relation avec les questions
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
 }
