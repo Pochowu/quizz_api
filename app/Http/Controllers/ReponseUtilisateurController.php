@@ -6,6 +6,7 @@ use App\Models\ReponseUtilisateur;
 use App\Models\Question;
 use App\Models\Proposition;
 use App\Models\Phase;
+use App\Models\StatistiquesUtilisateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -82,7 +83,7 @@ class ReponseUtilisateurController extends Controller
         ]);
 
         $reponseUtilisateur->load(['question', 'proposition']);
-
+            $this->mettreAJourStatistiques($user->id, $question->theme->phase->id);
         return response()->json([
             'message' => 'Réponse enregistrée avec succès',
             'reponse' => $reponseUtilisateur,
@@ -176,6 +177,16 @@ class ReponseUtilisateurController extends Controller
             'reponses' => $reponses
         ]);
     }
+
+    private function mettreAJourStatistiques($userId, $phaseId)
+{
+    $statistique = StatistiquesUtilisateur::firstOrCreate([
+        'user_id' => $userId,
+        'phase_id' => $phaseId
+    ]);
+
+    $statistique->mettreAJourStatistiques();
+}
 
     /**
      * Supprimer une réponse (pour admin)

@@ -30,8 +30,8 @@ class Phase extends Model
     }
 
     // // Relation avec les statistiques utilisateur
-    // public function statistiquesUtilisateur()
-    // {
-    //     return $this->hasMany(StatistiquesUtilisateur::class);
-    //  }
+    public function statistiquesUtilisateur()
+    {
+        return $this->hasMany(StatistiquesUtilisateur::class);
+     }
 }

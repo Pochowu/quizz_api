@@ -6,6 +6,7 @@ use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\PropositionController;
 use App\Http\Controllers\ReponseUtilisateurController;
+use App\Http\Controllers\StatistiquesUtilisateurController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,16 +18,14 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     // ... routes existantes ...
     
-    // Routes pour les réponses utilisateur
-    Route::post('/reponses', [ReponseUtilisateurController::class, 'store']);
-    Route::get('/reponses', [ReponseUtilisateurController::class, 'index']);
-    Route::get('/phases/{phaseId}/reponses', [ReponseUtilisateurController::class, 'reponsesParPhase']);
-    Route::get('/statistiques', [ReponseUtilisateurController::class, 'statistiquesUtilisateur']);
-    Route::get('/statistiques/{userId}', [ReponseUtilisateurController::class, 'statistiquesUtilisateur']);
+    // Routes pour les statistiques
+    Route::get('/statistiques-utilisateur', [StatistiquesUtilisateurController::class, 'index']);
+    Route::get('/classement', [StatistiquesUtilisateurController::class, 'classement']);
+    Route::get('/phases/{phaseId}/classement', [StatistiquesUtilisateurController::class, 'classementParPhase']);
     
-    // Routes ADMIN pour les réponses
-    Route::get('/admin/reponses', [ReponseUtilisateurController::class, 'allReponses']);
-    Route::delete('/admin/reponses/{reponseUtilisateur}', [ReponseUtilisateurController::class, 'destroy']);
+    // Routes ADMIN pour les statistiques
+    Route::get('/admin/statistiques-utilisateur/{userId}', [StatistiquesUtilisateurController::class, 'show']);
+    Route::post('/admin/statistiques/mettre-a-jour', [StatistiquesUtilisateurController::class, 'mettreAJourToutesStatistiques']);
 });
 
 // Route pour tester l'authentification
