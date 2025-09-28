@@ -23,15 +23,15 @@ class Phase extends Model
         'est_active' => 'boolean'
     ];
 
-    // // Relation avec les thèmes
-    // public function themes()
-    // {
-    //     return $this->hasMany(Theme::class);
-    // }
+    // Relation avec les thèmes
+    public function themes()
+    {
+        return $this->hasMany(Theme::class);
+    }
 
     // // Relation avec les statistiques utilisateur
     // public function statistiquesUtilisateur()
     // {
     //     return $this->hasMany(StatistiquesUtilisateur::class);
-     //}
+    //  }
 }
