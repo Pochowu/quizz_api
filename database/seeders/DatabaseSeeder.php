@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             PhaseSeeder::class,
             ThemeSeeder::class,
             QuestionSeeder::class,
+            PropositionSeeder::class,
         ]);
     }
 }

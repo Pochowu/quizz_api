@@ -5,38 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Question extends Model
+class Proposition extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'texte',
-        'explication',
-        'theme_id',
-        'temps_imparti',
+        'est_correcte',
+        'question_id',
         'ordre',
         'est_actif'
     ];
 
     protected $casts = [
-        'temps_imparti' => 'integer',
+        'est_correcte' => 'boolean',
         'ordre' => 'integer',
         'est_actif' => 'boolean'
     ];
 
-    // Relation avec le thème
-    public function theme()
+    // Relation avec la question
+    public function question()
     {
-        return $this->belongsTo(Theme::class);
+        return $this->belongsTo(Question::class);
     }
 
-    // Relation avec les propositions
-    public function propositions()
-    {
-        return $this->hasMany(Proposition::class);
-    }
-
-    // // Relation avec les réponses utilisateur
+    // Relation avec les réponses utilisateur
     // public function reponsesUtilisateur()
     // {
     //     return $this->hasMany(ReponseUtilisateur::class);
