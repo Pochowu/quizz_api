@@ -17,80 +17,70 @@ class ReponseUtilisateurController extends Controller
      * Soumettre une réponse à une question
      */
     public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'question_id' => 'required|exists:questions,id',
-            'proposition_id' => 'required|exists:propositions,id'
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'question_id' => 'required|exists:questions,id',
+        'proposition_id' => 'required|exists:propositions,id'
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $user = $request->user();
-        $questionId = $request->question_id;
-        $propositionId = $request->proposition_id;
-
-        // Vérifier si l'utilisateur a déjà répondu à cette question
-        $reponseExistante = ReponseUtilisateur::where('user_id', $user->id)
-                                            ->where('question_id', $questionId)
-                                            ->first();
-
-        if ($reponseExistante) {
-            return response()->json([
-                'message' => 'Vous avez déjà répondu à cette question.'
-            ], 422);
-        }
-
-        // Vérifier que la proposition appartient à la question
-        $proposition = Proposition::where('id', $propositionId)
-                                ->where('question_id', $questionId)
-                                ->first();
-
-        if (!$proposition) {
-            return response()->json([
-                'message' => 'Cette proposition ne correspond pas à la question.'
-            ], 422);
-        }
-
-        // Vérifier que la question est active
-        $question = Question::where('id', $questionId)
-                          ->where('est_actif', true)
-                          ->with('theme.phase')
-                          ->first();
-
-        if (!$question) {
-            return response()->json([
-                'message' => 'Cette question n\'est pas disponible.'
-            ], 422);
-        }
-
-        // Calculer les points obtenus
-        $points = 0;
-        if ($proposition->est_correcte) {
-            $points = $question->theme->phase->points_par_question;
-        }
-
-        // Créer la réponse utilisateur
-        $reponseUtilisateur = ReponseUtilisateur::create([
-            'user_id' => $user->id,
-            'question_id' => $questionId,
-            'proposition_id' => $propositionId,
-            'points_obtenus' => $points,
-            'date_reponse' => now()
-        ]);
-
-        $reponseUtilisateur->load(['question', 'proposition']);
-            $this->mettreAJourStatistiques($user->id, $question->theme->phase->id);
-        return response()->json([
-            'message' => 'Réponse enregistrée avec succès',
-            'reponse' => $reponseUtilisateur,
-            'est_correcte' => $proposition->est_correcte,
-            'points_obtenus' => $points
-        ], 201);
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
     }
+
+    $user = $request->user();
+    $questionId = $request->question_id;
+    $propositionId = $request->proposition_id;
+
+    // Vérifier si l'utilisateur a déjà répondu
+    $reponseExistante = ReponseUtilisateur::where('user_id', $user->id)
+                                        ->where('question_id', $questionId)
+                                        ->first();
+
+    if ($reponseExistante) {
+        return response()->json(['message' => 'Vous avez déjà répondu à cette question.'], 422);
+    }
+
+    // Vérifier que la proposition appartient à la question
+    $proposition = Proposition::where('id', $propositionId)
+                            ->where('question_id', $questionId)
+                            ->first();
+
+    if (!$proposition) {
+        return response()->json(['message' => 'Cette proposition ne correspond pas à la question.'], 422);
+    }
+
+    // Vérifier que la question est active
+    $question = Question::where('id', $questionId)
+                      ->where('est_actif', true)
+                      ->with('theme.phase')
+                      ->first();
+
+    if (!$question) {
+        return response()->json(['message' => 'Cette question n\'est pas disponible.'], 422);
+    }
+
+    // Calculer les points
+    $points = 0;
+    if ($proposition->est_correcte) {
+        $points = $question->theme->phase->points_par_question;
+    }
+
+    // Créer la réponse
+    $reponseUtilisateur = ReponseUtilisateur::create([
+        'user_id' => $user->id,
+        'question_id' => $questionId,
+        'proposition_id' => $propositionId,
+        'points_obtenus' => $points,
+        'date_reponse' => now()
+    ]);
+
+    return response()->json([
+        'message' => 'Réponse enregistrée avec succès',
+        'reponse' => $reponseUtilisateur,
+        'est_correcte' => $proposition->est_correcte,
+        'points_obtenus' => $points
+    ], 201);
+}
 
     /**
      * Récupérer les réponses d'un utilisateur

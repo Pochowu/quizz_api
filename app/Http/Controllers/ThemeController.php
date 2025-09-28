@@ -156,17 +156,15 @@ class ThemeController extends Controller
      * Récupérer tous les thèmes actifs (pour utilisateurs normaux)
      */
     public function themesActifs()
-    {
-        $themes = Theme::where('est_actif', true)
-                      ->with('phase')
-                      ->orderBy('phase_id')
-                      ->orderBy('ordre', 'asc')
-                      ->get(['id', 'nom', 'description', 'phase_id', 'ordre']);
+{
+    $themes = Theme::where('est_actif', true)
+                  ->with('phase')
+                  ->orderBy('phase_id')
+                  ->orderBy('ordre', 'asc')
+                  ->get(['id', 'nom', 'description', 'phase_id', 'ordre']);
 
-        return response()->json([
-            'themes' => $themes
-        ]);
-    }
+    return response()->json(['themes' => $themes]);
+}
 
     /**
      * Récupérer tous les thèmes avec pagination (pour utilisateurs normaux)

@@ -146,17 +146,18 @@ class QuestionController extends Controller
      * Récupérer les questions actives par thème (pour utilisateurs normaux)
      */
     public function questionsActivesParTheme($themeId)
-    {
-        $questions = Question::where('theme_id', $themeId)
-                           ->where('est_actif', true)
-                           ->with(['theme', 'theme.phase'])
-                           ->orderBy('ordre', 'asc')
-                           ->get(['id', 'texte', 'explication', 'theme_id', 'temps_imparti', 'ordre']);
+{
+    $questions = Question::where('theme_id', $themeId)
+                       ->where('est_actif', true)
+                       ->with(['theme', 'theme.phase', 'propositions' => function($query) {
+                           $query->where('est_actif', true)
+                                 ->orderBy('ordre', 'asc');
+                       }])
+                       ->orderBy('ordre', 'asc')
+                       ->get();
 
-        return response()->json([
-            'questions' => $questions
-        ]);
-    }
+    return response()->json(['questions' => $questions]);
+}
 
     /**
      * Récupérer les questions actives par phase (pour utilisateurs normaux)
@@ -180,17 +181,16 @@ class QuestionController extends Controller
     /**
      * Récupérer une question avec ses propositions (pour le quiz)
      */
-    public function questionAvecPropositions($questionId)
-    {
-        $question = Question::where('est_actif', true)
-                          ->with(['propositions' => function($query) {
-                              $query->where('est_actif', true)
-                                    ->orderBy('ordre', 'asc');
-                          }])
-                          ->findOrFail($questionId);
+   
+public function questionAvecPropositions($questionId)
+{
+    $question = Question::where('est_actif', true)
+                      ->with(['propositions' => function($query) {
+                          $query->where('est_actif', true)
+                                ->orderBy('ordre', 'asc');
+                      }])
+                      ->findOrFail($questionId);
 
-        return response()->json([
-            'question' => $question
-        ]);
-    }
+    return response()->json(['question' => $question]);
+}
 }
